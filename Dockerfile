@@ -1,4 +1,6 @@
-FROM raffapen/redis AS builder
+#----------------------------------------------------------------------------------------------
+# FROM redislabs/redis-arm:arm64-bionic AS builder
+FROM raffapen/redis:arm64-bionic AS builder
 
 RUN set -ex;\
     apt-get update;\
@@ -11,8 +13,10 @@ RUN ./system-setup.py
 RUN make deps
 RUN make
 
-# Package the runner
-FROM raffapen/redis
+#----------------------------------------------------------------------------------------------
+# FROM redislabs/redis-arm:arm64-bionic
+FROM raffapen/redis-arm:arm64-bionic
+
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
 RUN set -ex;\
