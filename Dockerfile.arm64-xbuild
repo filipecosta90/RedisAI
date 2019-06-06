@@ -5,6 +5,8 @@ ARG OSNICK=bionic
 #----------------------------------------------------------------------------------------------
 FROM raffapen/redis-${OSNICK}-xbuild:5.0.5 AS builder
 
+RUN [ "cross-build-start" ]
+
 ADD ./ /build
 WORKDIR /build
 
@@ -13,12 +15,16 @@ RUN ./system-setup.py
 RUN make deps
 RUN make -j`nproc`
 
+RUN [ "cross-build-end" ]
+
 #----------------------------------------------------------------------------------------------
 FROM raffapen/redis-${OSNICK}-xbuild:5.0.5
 
+RUN [ "cross-build-start" ]
+
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
-RUN mkdir -p "$LD_LIBRARY_PATH"
+RUN mkdir -p "$LD_LIBRARY_PATH";
 
 COPY --from=builder /build/bin/redisai.so "$LD_LIBRARY_PATH"
 COPY --from=builder /build/deps/install/*.so* "$LD_LIBRARY_PATH"
@@ -26,3 +32,5 @@ COPY --from=builder /build/deps/install/*.so* "$LD_LIBRARY_PATH"
 WORKDIR /data
 EXPOSE 6379
 CMD ["--loadmodule", "/usr/lib/redis/modules/redisai.so"]
+
+RUN [ "cross-build-end" ]

@@ -2,6 +2,7 @@ bin/*
 VARIANT
 BINDIR
 deps/*
+!deps/bazel/
 !deps/readies/
 !deps/*.py
 examples/js/node_modules/

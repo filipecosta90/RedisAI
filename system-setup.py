@@ -21,7 +21,7 @@ class RedisGearsSetup(paella.Setup):
         self.pip_install("wheel")
         self.pip_install("setuptools --upgrade")
         
-        self.install("git cmake ca-certificates curl unzip wget")
+        self.install("git python3 cmake ca-certificates curl unzip wget")
 
     def debian_compat(self):
         self.install("build-essential")
