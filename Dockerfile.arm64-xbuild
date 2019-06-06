@@ -24,7 +24,7 @@ RUN [ "cross-build-start" ]
 
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
-RUN mkdir -p "$LD_LIBRARY_PATH";
+RUN mkdir -p "$LD_LIBRARY_PATH"
 
 COPY --from=builder /build/bin/redisai.so "$LD_LIBRARY_PATH"
 COPY --from=builder /build/deps/install/*.so* "$LD_LIBRARY_PATH"

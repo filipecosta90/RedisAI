@@ -3,7 +3,7 @@
 ARG OSNICK=bionic
 
 #----------------------------------------------------------------------------------------------
-FROM raffapen/redis-${OSNICK}-xbuild:5.0.5 AS builder
+FROM raffapen/redis-${OSNICK}:5.0.5 AS builder
 
 ADD ./ /build
 WORKDIR /build
@@ -14,7 +14,7 @@ RUN make deps
 RUN make -j`nproc`
 
 #----------------------------------------------------------------------------------------------
-FROM raffapen/redis-${OSNICK}-xbuild:5.0.5
+FROM raffapen/redis-${OSNICK}:5.0.5
 
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
