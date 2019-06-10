@@ -1,9 +1,9 @@
-# TAG redisai-cpu-${ARCH}-${OSNICK}:latest
+# BUILD redisfab/redisai-cpu-${ARCH}-${OSNICK}:latest
 
 ARG OSNICK=bionic
 
 #----------------------------------------------------------------------------------------------
-FROM raffapen/redis-${OSNICK}-xbuild:5.0.5 AS builder
+FROM redisfab/redis-${OSNICK}-xbuild:5.0.5 AS builder
 
 RUN [ "cross-build-start" ]
 
@@ -18,7 +18,7 @@ RUN make -j`nproc`
 RUN [ "cross-build-end" ]
 
 #----------------------------------------------------------------------------------------------
-FROM raffapen/redis-${OSNICK}-xbuild:5.0.5
+FROM redisfab/redis-${OSNICK}-xbuild:5.0.5
 
 RUN [ "cross-build-start" ]
 

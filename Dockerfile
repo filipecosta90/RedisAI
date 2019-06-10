@@ -1,9 +1,9 @@
-# TAG redisai-cpu-${ARCH}-${OSNICK}:latest
+# BUILD redisai-cpu-${ARCH}-${OSNICK}:VERSION
 
 ARG OSNICK=bionic
 
 #----------------------------------------------------------------------------------------------
-FROM raffapen/redis-${OSNICK}:5.0.5 AS builder
+FROM redislabs/redis-${OSNICK}:5.0.5 AS builder
 
 ADD ./ /build
 WORKDIR /build
@@ -14,7 +14,7 @@ RUN make deps
 RUN make -j`nproc`
 
 #----------------------------------------------------------------------------------------------
-FROM raffapen/redis-${OSNICK}:5.0.5
+FROM redislabs/redis-${OSNICK}:5.0.5
 
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
