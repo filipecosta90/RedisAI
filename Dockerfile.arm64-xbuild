@@ -1,4 +1,4 @@
-# BUILD redisfab/redisai-cpu-${ARCH}-${OSNICK}:latest
+# BUILD redisfab/redisai-cpu-${ARCH}-${OSNICK}:M.m.b
 
 ARG OSNICK=bionic
 

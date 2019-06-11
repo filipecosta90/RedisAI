@@ -1,4 +1,4 @@
-# BUILD redisai-cpu-${ARCH}-${OSNICK}:VERSION
+# BUILD redisai-cpu-${ARCH}-${OSNICK}:M.m.b
 
 ARG OSNICK=bionic
 
