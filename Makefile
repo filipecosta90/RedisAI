@@ -59,9 +59,11 @@ endif
 	. ./build/pyenv/bin/activate ;\
 	ln -fs $(PWD)/deps/install/lib/ $(REDIS_ENT_LIB_PATH) ;\
 	ramp pack -m $(PWD)/ramp.yml -o "build/redisai.{os}-{architecture}.${PACK_VER}.zip" $(BINDIR)/ramp/redisai.so 2>&1 > /dev/null ;\
+	ramp pack -m $(PWD)/ramp.yml -o "build/redisai.zip" $(BINDIR)/ramp/redisai.so 2>&1 > /dev/null ;\
 	rm $(REDIS_ENT_LIB_PATH)
 	@echo Done.
 	@echo "Building dependencies file redisai-dependencies.${PACK_VER}.tgz ..."
-	@cd deps/install/lib; \
-	tar pczf ../../../build/redisai-dependencies.${PACK_VER}.tgz *.so*
+	@cd deps/install/lib ;\
+	tar pczf ../../../build/redisai-dependencies.${PACK_VER}.tgz *.so* ;\
+	ln -sf redisai-dependencies.${PACK_VER}.tgz $(BINDIR)/redisai-dependencies.tgz
 	@echo Done.
