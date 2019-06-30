@@ -7,6 +7,8 @@ FROM ${OS}
 ARG OS=ubuntu:bionic
 ARG TF_VER=v1.13.1
 
+ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
+
 RUN set -ex; apt-get update; apt-get install -y git
 
 WORKDIR /build
@@ -28,4 +30,4 @@ RUN apt-get install -y python3 python3-dev
 
 RUN cd tensorflow ;\
 	./configure ;\
-	bazel build --jobs `nproc` --config=opt //tensorflow:libtensorflow.so
+	bazel build --jobs $(eval "$X_NPROC") --config=opt //tensorflow:libtensorflow.so

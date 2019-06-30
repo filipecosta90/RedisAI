@@ -6,6 +6,8 @@ FROM ${OS}
 
 ARG TF_VER=v1.13.1
 
+ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
+
 RUN set -ex; apt-get update; apt-get install -y git
 
 WORKDIR /build
@@ -58,4 +60,4 @@ ENV TF_NEED_TENSORRT=0
 
 RUN cd tensorflow ;\
 	./configure ;\
-	bazel build --jobs `nproc` --config=opt //tensorflow:libtensorflow.so
+	bazel build --jobs $(eval "$X_NPROC") --config=opt //tensorflow:libtensorflow.so

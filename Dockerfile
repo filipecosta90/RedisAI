@@ -5,13 +5,15 @@ ARG OSNICK=bionic
 #----------------------------------------------------------------------------------------------
 FROM redislabs/redis-${OSNICK}:5.0.5 AS builder
 
+ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
+
 ADD ./ /build
 WORKDIR /build
 
 RUN ./deps/readies/bin/getpy2
 RUN ./system-setup.py
 RUN make deps
-RUN make -j`nproc`
+RUN make -j$(eval "$X_NPROC")
 
 #----------------------------------------------------------------------------------------------
 FROM redislabs/redis-${OSNICK}:5.0.5
