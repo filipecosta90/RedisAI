@@ -51,8 +51,8 @@ int RAI_ModelRunTorch(RAI_ModelRunCtx* mctx, RAI_Error *error) {
   size_t ninputs = array_len(mctx->inputs);
   size_t noutputs = array_len(mctx->outputs);
 
-  DLManagedTensor** inputs = RedisModule_Calloc(ninputs, sizeof(*inputs));
-  DLManagedTensor** outputs = RedisModule_Calloc(noutputs, sizeof(*outputs));
+  DLManagedTensor* inputs[ninputs];
+  DLManagedTensor* outputs[noutputs];
 
   for (size_t i=0 ; i<ninputs; ++i) {
     inputs[i] = &mctx->inputs[i].tensor->tensor;
@@ -76,7 +76,6 @@ int RAI_ModelRunTorch(RAI_ModelRunCtx* mctx, RAI_Error *error) {
   for(size_t i=0 ; i<array_len(mctx->outputs) ; ++i) {
     if (outputs[i] == NULL) {
       RAI_SetError(error, RAI_EMODELRUN, "Model did not generate the expected number of outputs.");
-      RedisModule_Free(error_descr);
       return 1;
     }
     RAI_Tensor* output_tensor = RAI_TensorCreateFromDLTensor(outputs[i]);
@@ -161,7 +160,6 @@ int RAI_ScriptRunTorch(RAI_ScriptRunCtx* sctx, RAI_Error* error) {
                  &error_descr, RedisModule_Alloc);
 
   if (error_descr) {
-    printf("F\n");
     RAI_SetError(error, RAI_ESCRIPTRUN, error_descr);
     RedisModule_Free(error_descr);
     return 1;

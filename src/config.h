@@ -3,7 +3,7 @@
 
 #define RAI_TENSORFLOW_BACKEND
 #define RAI_TORCH_BACKEND
-//#define RAI_ONNXRUNTIME_BACKEND
+#define RAI_ONNXRUNTIME_BACKEND
 
 typedef enum {
   RAI_BACKEND_TENSORFLOW = 0,
@@ -17,7 +17,7 @@ typedef enum {
   RAI_DEVICE_GPU,
 } RAI_Device;
 
-#define RAI_ENC_VER 200
+#define RAI_ENC_VER 300
 
 //#define RAI_COPY_RUN_INPUT
 #define RAI_COPY_RUN_OUTPUT

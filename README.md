@@ -1,5 +1,6 @@
 [![GitHub issues](https://img.shields.io/github/release/RedisAI/RedisAI.svg)](https://github.com/RedisAI/RedisAI/releases/latest)
 [![CircleCI](https://circleci.com/gh/RedisAI/RedisAI/tree/master.svg?style=svg)](https://circleci.com/gh/RedisAI/RedisAI/tree/master)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/redisai/redisai.svg)](https://hub.docker.com/r/redisai/redisai/builds/)
 
 # RedisAI
 
@@ -45,7 +46,8 @@ redis-cli
 ```
 
 ## Building
-Make sure Python 2.7 is installed on your system.
+This will checkout and build and download the libraries for the backends
+(TensorFlow, PyTorch, ONNXRuntime) for your platform.
 
 Then, invoke the following to install the required dependencies.
 
@@ -88,12 +90,12 @@ Some languages have client libraries that provide support for RedisAI's commands
 
 ## Backend Dependency
 
-RedisAI currently supports PyTorch (libtorch) and Tensorflow (libtensorflow) as backends. We are also building support for ONNXRuntime backend soon. This section shows the version map between RedisAI and supported backends. This extremely important since the serialization mechanism of one version might not match with another. For making sure your model will work with a given RedisAI version, check with the backend documentation about incompatible features between the version of your backend and the version RedisAI is built with.
+RedisAI currently supports PyTorch (libtorch), Tensorflow (libtensorflow) and ONNXRuntime as backends. This section shows the version map between RedisAI and supported backends. This extremely important since the serialization mechanism of one version might not match with another. For making sure your model will work with a given RedisAI version, check with the backend documentation about incompatible features between the version of your backend and the version RedisAI is built with.
 
 
 | RedisAI | PyTorch | TensorFlow | ONNXRuntime   |
 |:--------|:-------:|:----------:|:-------------:|
-| 0.1.0   | 1.0.1   | 1.12.0     | Not Yet       |
+| 0.1.0   | 1.0.1   | 1.12.0     | 0.4.0         |
 
 
 ## Documentation
@@ -108,4 +110,4 @@ Read the docs at [redisai.io](http://redisai.io).
 
 Redis Source Available License Agreement - see [LICENSE](LICENSE)
 
-Copyright 2019, Orobix Srl & Redis Labs Ltd
+Copyright 2019, Tensorwerk Inc & Redis Labs Ltd
