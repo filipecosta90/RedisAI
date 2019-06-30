@@ -63,7 +63,7 @@ fi
 
 ### PYTORCH
 
-PT_VERSION=1.0.1
+PT_VERSION=1.1.0
 #PT_VERSION="latest"
 
 if [[ ! -d libtorch ]]; then
@@ -111,6 +111,32 @@ if [[ ! -d mkl ]]; then
 		tar xzf ${MKL_ARCHIVE} --no-same-owner --strip-components=1 -C deps/mkl
 	fi
 fi
+
+###  ONNXRUNTIME
+
+ORT_VERSION="0.4.0"
+
+if [[ $OS == linux ]]; then
+  if [[ $GPU == no ]]; then
+    ORT_OS="linux-x64"
+    ORT_BUILD="cpu"
+  else
+    ORT_OS="linux-x64-gpu"
+    ORT_BUILD="gpu"
+  fi
+elif [[ $OS == macosx ]]; then
+  ORT_OS="osx-x64"
+  ORT_BUILD=""
+fi
+
+ORT_ARCHIVE=onnxruntime-${ORT_OS}-${ORT_VERSION}.tgz
+
+if [ ! -e ${ORT_ARCHIVE} ]; then
+  echo "Downloading ONNXRuntime ${ORT_VERSION} ${ORT_BUILD}"
+  wget -q https://github.com/Microsoft/onnxruntime/releases/download/v${ORT_VERSION}/${ORT_ARCHIVE}
+fi
+
+tar xf ${ORT_ARCHIVE} --no-same-owner --strip-components=1 -C ${PREFIX}
 
 ### Collect libraries
 
