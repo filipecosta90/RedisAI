@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import sys
 import os
@@ -21,7 +21,7 @@ class RedisGearsSetup(paella.Setup):
         self.pip_install("wheel")
         self.pip_install("setuptools --upgrade")
         
-        self.install("git python3 cmake ca-certificates curl unzip wget")
+        self.install("git git-lfs python3 cmake ca-certificates curl unzip wget patchelf")
 
     def debian_compat(self):
         self.install("build-essential")

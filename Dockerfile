@@ -1,9 +1,11 @@
 # BUILD redisai-cpu-${ARCH}-${OSNICK}:M.m.b
 
-ARG OSNICK=bionic
+# stretch|bionic
+ARG OSNICK=stretch
 
 #----------------------------------------------------------------------------------------------
-FROM redislabs/redis-${OSNICK}:5.0.5 AS builder
+# FROM redisfab/redis-${OSNICK}:5.0.5 AS builder
+FROM redis:latest AS builder
 
 ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
 
@@ -16,7 +18,8 @@ RUN make deps
 RUN make -j$(eval "$X_NPROC")
 
 #----------------------------------------------------------------------------------------------
-FROM redislabs/redis-${OSNICK}:5.0.5
+# FROM redisfab/redis-${OSNICK}:5.0.5
+FROM redis:latest
 
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
