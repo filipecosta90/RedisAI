@@ -1,10 +1,10 @@
-ARG OS=ubuntu:bionic
+ARG OS=debian:stretch-slim
 
 #----------------------------------------------------------------------------------------------
 FROM ${OS}
 
 # ARG ARCH=x64
-ARG PT_VER=v1.0.1
+ARG PT_VER=v1.1.0
 
 RUN set -ex; apt-get update; apt-get install -y git
 

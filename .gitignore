@@ -2,12 +2,13 @@ bin/*
 VARIANT
 BINDIR
 deps/*
-!deps/bazel/
 !deps/readies/
 !deps/*.py
 examples/js/node_modules/
 examples/js/package-lock.json
 /[0-9]*/
+*.tar.gz
+*.tgz
 
 # Misc
 .DS_Store

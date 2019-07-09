@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# set -xe
+set -e
 
 if [[ "$1" == "cpu" ]]; then
 	GPU=no
