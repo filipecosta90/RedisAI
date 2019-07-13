@@ -72,7 +72,7 @@ def collect_pytorch():
             copy_p(f, d_pytorch/'lib')
     with cwd(pytorch/'torch'):
         shutil.copytree('share', d_pytorch/'share', ignore_dangling_symlinks=True)
-    create_tar(f'libtorch-{pt_build}-{pt_os}-{pt_arch}-{pt_ver}.tar.gz', dest, 'libtorch')
+    create_tar('libtorch-{}-{}-{}-{}.tar.gz'.format(pt_build, pt_os, pt_arch, pt_ver), dest, 'libtorch')
 
 #----------------------------------------------------------------------------------------------
 

@@ -41,8 +41,8 @@ RUN cd pytorch ;\
 	python3 setup.py install
 
 ADD ./deps/readies/ /build/deps/
-ADD ./collect.py /build/
+ADD ./build/libtorch-arm/collect.py /build/
 
-RUN ./collect.py
+RUN  ./collect.py
 
 RUN [ "cross-build-end" ]
