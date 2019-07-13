@@ -15,9 +15,9 @@ import paella
 PYTORCH_VERSION = '1.1.0'
 
 parser = argparse.ArgumentParser(description='Prepare RedisAI dependant distribution packages.')
-parser.add_argument('--pytorch', default='../pytorch', help='root of pytorch repository')
+parser.add_argument('--pytorch', default='pytorch', help='root of pytorch repository')
 parser.add_argument('--pytorch-ver', default=PYTORCH_VERSION, help='pytorch version')
-parser.add_argument('--deps', default='deps', help='destination directory')
+parser.add_argument('--deps', default='.', help='destination directory')
 parser.add_argument('-n', '--nop', action="store_true", help='no operation')
 args = parser.parse_args()
 
@@ -41,6 +41,8 @@ if pt_arch == 'x64':
     pt_arch = 'x86_64'
 elif pt_arch == 'arm64v8':
     pt_arch = 'arm64'
+elif pt_arch == 'arm32v7':
+    pt_arch = 'arm'
 
 pt_ver = args.pytorch_ver
 

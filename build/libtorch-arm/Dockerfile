@@ -13,20 +13,24 @@ FROM redisfab/${ARCH}-xbuild:${OSNICK} as builder
 
 RUN [ "cross-build-start" ] 
 
-RUN set -ex; apt-get update -qq; apt-get install -y git
+RUN set -e ;\
+	apt-get update -qq ;\
+	apt-get install -y git
 
 WORKDIR /build
 
-RUN apt-get install -y build-essential ninja-build cmake python3-pip  python3-cffi
+RUN apt-get install -y build-essential ninja-build cmake python3-pip python3-cffi
 RUN pip3 install setuptools pyyaml typing numpy
 # mkl mkl-include
 
-RUN git clone https://github.com/pytorch/pytorch.git ;\
+RUN set -e ;\
+	git clone https://github.com/pytorch/pytorch.git ;\
 	cd pytorch ;\
 	git checkout ${PT_VER} ;\
 	git submodule update --init --recursive
 
-RUN cd pytorch ;\
+RUN set -e ;\
+	cd pytorch ;\
 	BUILD_PYTHON=0 \
 	USE_GLOO=1 \
 	USE_OPENCV=0 \
