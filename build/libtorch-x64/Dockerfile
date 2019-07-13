@@ -5,7 +5,7 @@ FROM ${OS}
 
 ARG PT_VER=v1.1.0
 
-RUN set -ex; apt-get update; apt-get install -y git
+RUN set -ex; apt-get -qq update; apt-get -q install -y git
 
 WORKDIR /build
 

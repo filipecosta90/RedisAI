@@ -12,7 +12,7 @@ import paella
 
 #----------------------------------------------------------------------------------------------
 
-PYTORCH_VERSION = '1.0.1'
+PYTORCH_VERSION = '1.1.0'
 
 parser = argparse.ArgumentParser(description='Prepare RedisAI dependant distribution packages.')
 parser.add_argument('--pytorch', default='../pytorch', help='root of pytorch repository')

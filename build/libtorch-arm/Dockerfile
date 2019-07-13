@@ -1,20 +1,24 @@
-ARG OS=debian:stretch-slim
+# BUILD redisfab/libtorch-${ARCH}:$(PT_VER)
 
-#----------------------------------------------------------------------------------------------
-FROM ${OS}
+# stretch|bionic
+ARG OSNICK=stretch
 
-# ARG ARCH=x64
+# arm32v7|arm64v8
+ARG ARCH=arm64v8
+
 ARG PT_VER=v1.1.0
 
-RUN set -ex; apt-get update; apt-get install -y git
+#----------------------------------------------------------------------------------------------
+FROM redisfab/${ARCH}-xbuild:${OSNICK} as builder
+
+RUN [ "cross-build-start" ] 
+
+RUN set -ex; apt-get update -qq; apt-get install -y git
 
 WORKDIR /build
 
-RUN apt-get install -y build-essential
-RUN apt-get install -y python3-pip  python3-cffi
-RUN apt-get install -y ninja-build cmake
-RUN pip3 install setuptools pyyaml typing
-RUN pip3 install numpy
+RUN apt-get install -y build-essential ninja-build cmake python3-pip  python3-cffi
+RUN pip3 install setuptools pyyaml typing numpy
 # mkl mkl-include
 
 RUN git clone https://github.com/pytorch/pytorch.git ;\
@@ -35,3 +39,10 @@ RUN cd pytorch ;\
 	NO_NNPACK=1 \
 	NO_QNNPACK=1 \
 	python3 setup.py install
+
+ADD ./deps/readies/ /build/deps/
+ADD ./collect.py /build/
+
+RUN ./collect.py
+
+RUN [ "cross-build-end" ]

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# set -x
 set -e
 
 if [[ "$1" == "cpu" ]]; then
@@ -20,6 +21,9 @@ cd deps
 if [[ ! -d dlpack ]]; then
     echo "Cloning dlpack..."
     git clone --depth 1 https://github.com/dmlc/dlpack.git
+	echo "Done."
+else
+	echo "dlpack is in place."
 fi
 
 ### TENSORFLOW
@@ -57,8 +61,14 @@ if [[ ! -d tensorflow ]]; then
 
 	[[ ! -f $LIBTF_ARCHIVE ]] && wget --quiet $LIBTF_URL_BASE/$LIBTF_ARCHIVE
 
-	mkdir -p tensorflow
-	tar xf $LIBTF_ARCHIVE --no-same-owner --strip-components=1 -C tensorflow
+	rm -rf tensorflow.x
+	mkdir tensorflow.x
+	tar xf $LIBTF_ARCHIVE --no-same-owner --strip-components=1 -C tensorflow.x
+	mv tensorflow.x tensorflow
+	
+	echo "Done."
+else
+	echo "TensorFlow is in place."
 fi
 
 ### PYTORCH
@@ -91,9 +101,18 @@ if [[ ! -d libtorch ]]; then
 	LIBTORCH_ARCHIVE=libtorch-${PT_BUILD}-${PT_OS}-${PT_ARCH}-${PT_VERSION}.tar.gz
 	[[ -z $LIBTORCH_URL ]] && LIBTORCH_URL=https://s3.amazonaws.com/redismodules/pytorch/$LIBTORCH_ARCHIVE
 
-	[[ ! -f $LIBTORCH_ARCHIVE ]] && wget --quiet $LIBTORCH_URL
+	[[ ! -f $LIBTORCH_ARCHIVE ]] && wget -q $LIBTORCH_URL
 
-	tar xf $LIBTORCH_ARCHIVE --no-same-owner
+	rm -rf libtorch.x
+	mkdir libtorch.x
+
+	tar xf $LIBTORCH_ARCHIVE --no-same-owner -C libtorch.x
+	mv libtorch.x/libtorch libtorch
+	rmdir libtorch.x
+	
+	echo "Done."
+else
+	echo "librotch is in place."
 fi
 
 ### MKL
@@ -106,10 +125,18 @@ if [[ ! -d mkl ]]; then
 
 		MKL_OS=mac
 		MKL_ARCHIVE=mklml_${MKL_OS}_${MKL_BUNDLE_VER}.tgz
-		[[ ! -e ${MKL_ARCHIVE} ]] && wget --quiet https://github.com/intel/mkl-dnn/releases/download/v${MKL_VERSION}/${MKL_ARCHIVE}
-		mkdir -p mkl
-		tar xzf ${MKL_ARCHIVE} --no-same-owner --strip-components=1 -C deps/mkl
+		[[ ! -e ${MKL_ARCHIVE} ]] && wget -q https://github.com/intel/mkl-dnn/releases/download/v${MKL_VERSION}/${MKL_ARCHIVE}
+		
+		rm -rf mkl.x
+		mkdir mkl.x
+		tar xzf ${MKL_ARCHIVE} --no-same-owner --strip-components=1 -C mkl.x
+		mv mkl.x mkl
+		
+		
+		echo "Done."
 	fi
+else
+	echo "mkl is in place."
 fi
 
 ###  ONNXRUNTIME
@@ -117,33 +144,50 @@ fi
 ORT_VERSION="0.4.0"
 
 if [[ $OS == linux ]]; then
-  if [[ $GPU == no ]]; then
-    ORT_OS="linux-x64"
-    ORT_BUILD="cpu"
-  else
-    ORT_OS="linux-x64-gpu"
-    ORT_BUILD="gpu"
-  fi
+	if [[ $GPU == no ]]; then
+		ORT_OS="linux-x64"
+		ORT_BUILD="cpu"
+	else
+		ORT_OS="linux-x64-gpu"
+		ORT_BUILD="gpu"
+	fi
 elif [[ $OS == macosx ]]; then
-  ORT_OS="osx-x64"
-  ORT_BUILD=""
+	ORT_OS="osx-x64"
+	ORT_BUILD=""
 fi
 
 ORT_ARCHIVE=onnxruntime-${ORT_OS}-${ORT_VERSION}.tgz
 
-if [ ! -e ${ORT_ARCHIVE} ]; then
-  echo "Downloading ONNXRuntime ${ORT_VERSION} ${ORT_BUILD}"
-  wget -q https://github.com/Microsoft/onnxruntime/releases/download/v${ORT_VERSION}/${ORT_ARCHIVE}
-fi
+if [[ ! -d onnx ]]; then
+	echo "Installing onnx..."
 
-tar xf ${ORT_ARCHIVE} --no-same-owner --strip-components=1 -C ${PREFIX}
+	if [[ ! -e ${ORT_ARCHIVE} ]]; then
+		echo "Downloading ONNXRuntime ${ORT_VERSION} ${ORT_BUILD} ..."
+		wget -q https://github.com/Microsoft/onnxruntime/releases/download/v${ORT_VERSION}/${ORT_ARCHIVE}
+		echo "Done."
+	fi
+
+	rm -rf onnx.x
+	mkdir onnx.x
+	tar xzf ${ORT_ARCHIVE} --no-same-owner --strip-components=1 -C onnx.x
+	mv onnx.x onnx
+	
+	echo "Done."
+else
+	echo "onnx is in place."
+fi
 
 ### Collect libraries
 
 if [[ ! -d install ]]; then
 	echo "Collecting binaries..."
 
-	python3 collect-bin.py
+	rm -rf install.x
+	mkdir install.x
+	python3 collect-bin.py --into install.x
+	mv install.x install
+	
+	echo "Done."
 fi
 
 # echo "Done"
