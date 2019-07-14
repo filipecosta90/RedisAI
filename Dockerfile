@@ -1,7 +1,7 @@
 # BUILD redisai-cpu-${ARCH}-${OSNICK}:M.m.b
 
-# stretch|bionic
-ARG OSNICK=stretch
+# stretch|bionic|buster
+ARG OSNICK=buster
 
 #----------------------------------------------------------------------------------------------
 # FROM redisfab/redis-${OSNICK}:5.0.5 AS builder

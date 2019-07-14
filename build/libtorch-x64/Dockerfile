@@ -1,9 +1,9 @@
-ARG OS=debian:stretch
+ARG OS=debian:buster
 
 #----------------------------------------------------------------------------------------------
 FROM ${OS}
 
-ARG PT_VER=v1.1.0
+ARG PT_VER=1.1.0
 
 RUN set -ex; apt-get -qq update; apt-get -q install -y git
 
@@ -17,7 +17,7 @@ RUN pip3 install numpy mkl mkl-include
 
 RUN git clone https://github.com/pytorch/pytorch.git ;\
         cd pytorch ;\
-        git checkout ${PT_VER}
+        git checkout v${PT_VER}
 
 RUN cd pytorch ;\
         BUILD_PYTHON=0 \

@@ -1,6 +1,6 @@
 # BUILD redisfab/redisai-cpu-${ARCH}-${OSNICK}:M.m.b
 
-ARG OSNICK=bionic
+ARG OSNICK=buster
 
 #----------------------------------------------------------------------------------------------
 FROM redisfab/redis-${OSNICK}-xbuild:5.0.5 AS builder

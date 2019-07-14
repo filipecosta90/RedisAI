@@ -6,7 +6,7 @@ VERSION=1.1.0
 S3_URL=redismodules/pytorch
 
 build:
-	@docker build -t redisfab/libtorch-arm64v8:$(VERSION) -f build/libtorch-arm/Dockerfile ../..
+	@docker build -t redisfab/libtorch-arm64v8:$(VERSION) -f Dockerfile ../..
 
 pack:
 	@PT_VERSION=$(VERSION) ./repack.sh

@@ -1,4 +1,4 @@
-ARG OS=ubuntu:bionic
+ARG OS=debian:buster
 
 #----------------------------------------------------------------------------------------------
 # FROM insready/bazel:latest as bazel
@@ -15,8 +15,9 @@ WORKDIR /build
 # COPY --from=bazel /usr/bin/bazel* /usr/local/bin/
 COPY ../../deps/bazel/bazel-0.24.1.x64 /usr/local/bin/bazel
 
-RUN apt-get install -y build-essential
-RUN apt-get install -y python3-dev python3-pip
+RUN set -e ;\
+	apt-get update ;\
+	apt-get install -y git build-essential python3-dev python3-pip
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN pip3 install wheel setuptools
@@ -24,7 +25,8 @@ RUN pip3 install six numpy mock
 RUN pip3 install keras_applications==1.0.6 --no-deps
 RUN pip3 install keras_preprocessing==1.0.5 --no-deps
 
-RUN git clone https://github.com/tensorflow/tensorflow.git ;\
+RUN set -e ;\
+	git clone https://github.com/tensorflow/tensorflow.git ;\
 	cd tensorflow ;\
 	git checkout ${TF_VER}
 
@@ -58,6 +60,7 @@ ENV TF_NEED_COMPUTECPP=0
 ENV TF_NEED_KAFKA=0
 ENV TF_NEED_TENSORRT=0
 
-RUN cd tensorflow ;\
+RUN set -e ;\
+	cd tensorflow ;\
 	./configure ;\
 	bazel build --jobs $(eval "$X_NPROC") --config=opt //tensorflow:libtensorflow.so
