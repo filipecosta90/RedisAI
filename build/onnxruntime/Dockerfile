@@ -1,0 +1,54 @@
+# BUILD redisfab/libtorch-${ARCH}:$(ONNXRUNTIME_VER)
+
+# stretch|bionic|buster
+ARG OSNICK=buster
+
+# arm32v7|arm64v8
+ARG ARCH=arm32v7 
+
+#----------------------------------------------------------------------------------------------
+FROM redisfab/${ARCH}-xbuild:${OSNICK} as builder
+
+ARG ONNXRUNTIME_REPO=https://github.com/Microsoft/onnxruntime
+ARG ONNXRUNTIME_BRANCH=master
+ARG ONNXRUNTIME_VER=0.4.0
+
+RUN [ "cross-build-start" ]
+
+RUN apt-get -qq update
+RUN apt-get -qq install -y curl wget tar git
+RUN apt-get -qq install -y build-essential
+RUN apt-get -qq install -y libcurl4-openssl-dev libssl-dev libatlas-base-dev zlib1g-dev
+
+RUN apt-get -qq install -y python3 python3-pip python3-dev
+RUN pip3 install --upgrade pip setuptools wheel
+RUN pip3 install numpy
+
+WORKDIR /code
+
+RUN set -e ;\
+	wget -q https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3.tar.gz ;\
+	tar zxf cmake-3.14.3.tar.gz ;\
+	cd cmake-3.14.3 ;\
+	./configure --system-curl ;\
+	make -j $(nproc);\
+	make install
+
+# Set up build args
+ARG BUILDTYPE=MinSizeRel
+ARG BUILDARGS="--config ${BUILDTYPE} --arm"
+
+# Prepare onnxruntime Repo
+RUN set -e ;\
+	git clone --single-branch --branch ${ONNXRUNTIME_BRANCH} --recursive ${ONNXRUNTIME_REPO} onnxruntime ;\
+	git checkout "rel-${ONNXRUNTIME_VER}" ;\
+	cd onnxruntime ;\
+	./build.sh ${BUILDARGS} --update --build ;\
+	./build.sh ${BUILDARGS} --build_shared_lib ;\
+	./build.sh ${BUILDARGS} --enable_pybind --build_wheel
+
+# Build Output
+RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/*.so
+RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/dist/*.whl
+
+RUN [ "cross-build-end" ]

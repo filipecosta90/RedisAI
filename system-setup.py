@@ -34,6 +34,7 @@ class RedisGearsSetup(paella.Setup):
         # uninstall and install psutil (order is important), otherwise RLTest fails
         self.run("pip uninstall -y psutil")
         self.install("python2-psutil")
+
     def fedora(self):
         self.group_install("'Development Tools'")
 

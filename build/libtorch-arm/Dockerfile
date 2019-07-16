@@ -1,4 +1,4 @@
-# BUILD redisfab/libtorch-${ARCH}:$(PT_VER)
+# BUILD redisfab/libtorch-cpu-${ARCH}:$(PT_VER)
 
 # stretch|bionic|buster
 ARG OSNICK=buster
@@ -18,28 +18,30 @@ WORKDIR /build
 RUN set -e ;\
 	apt-get -qq update ;\
 	apt-get -qq install -y git build-essential ninja-build cmake python3-pip python3-cffi
-RUN pip3 install setuptools pyyaml typing numpy
-# mkl mkl-include
+RUN pip3 install setuptools pyyaml typing
+RUN pip3 install numpy
+# RUN pip3 install mkl mkl-include
 
 RUN set -e ;\
 	git clone https://github.com/pytorch/pytorch.git ;\
 	cd pytorch ;\
-	git checkout v${PT_VER} ;\
+	git checkout "v${PT_VER}" ;\
 	git submodule update --init --recursive
+
+ENV BUILD_PYTHON=0
+ENV USE_GLOO=1
+ENV USE_OPENCV=0
+ENV BUILD_TORCH=ON
+ENV BUILD_BINARY=ON
+ENV BUILD_CAFFE2_OPS=ON
+ENV NO_CUDA=1
+ENV NO_DISTRIBUTED=1
+ENV NO_MKLDNN=1
+ENV NO_NNPACK=1
+ENV NO_QNNPACK=1
 
 RUN set -e ;\
 	cd pytorch ;\
-	BUILD_PYTHON=0 \
-	USE_GLOO=1 \
-	USE_OPENCV=0 \
-	BUILD_TORCH=ON \
-	BUILD_BINARY=ON \
-	BUILD_CAFFE2_OPS=ON \
-	NO_CUDA=1 \
-	NO_DISTRIBUTED=1 \
-	NO_MKLDNN=1 \
-	NO_NNPACK=1 \
-	NO_QNNPACK=1 \
 	python3 setup.py install
 
 ADD ./deps/readies/ /build/deps/readies/

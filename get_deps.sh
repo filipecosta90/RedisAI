@@ -158,8 +158,8 @@ fi
 
 ORT_ARCHIVE=onnxruntime-${ORT_OS}-${ORT_VERSION}.tgz
 
-if [[ ! -d onnx ]]; then
-	echo "Installing onnx..."
+if [[ ! -d onnxruntime ]]; then
+	echo "Installing onnxruntime..."
 
 	if [[ ! -e ${ORT_ARCHIVE} ]]; then
 		echo "Downloading ONNXRuntime ${ORT_VERSION} ${ORT_BUILD} ..."
@@ -167,14 +167,14 @@ if [[ ! -d onnx ]]; then
 		echo "Done."
 	fi
 
-	rm -rf onnx.x
-	mkdir onnx.x
-	tar xzf ${ORT_ARCHIVE} --no-same-owner --strip-components=1 -C onnx.x
-	mv onnx.x onnx
+	rm -rf onnxruntime.x
+	mkdir onnxruntime.x
+	tar xzf ${ORT_ARCHIVE} --no-same-owner --strip-components=1 -C onnxruntime.x
+	mv onnxruntime.x onnxruntime
 	
 	echo "Done."
 else
-	echo "onnx is in place."
+	echo "onnxruntime is in place."
 fi
 
 ### Collect libraries
@@ -183,11 +183,12 @@ if [[ ! -d install ]]; then
 	echo "Collecting binaries..."
 
 	rm -rf install.x
-	mkdir install.x
 	python3 collect-bin.py --into install.x
 	mv install.x install
 	
 	echo "Done."
+else
+	echo "Binaries in place."
 fi
 
 # echo "Done"

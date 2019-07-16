@@ -1,11 +1,20 @@
-ARG ARCH=x64
+# BUILD redisfab/tensorflow-${ARCH}:$(TF_VER)
+
+# stretch|bionic|buster
+ARG OSNICK=buster
+
+# arm32v7|arm64v8
+ARG ARCH=arm64v8
+
+ARG TF_VER=1.13.1
 
 #----------------------------------------------------------------------------------------------
 FROM insready/bazel:latest as bazel
-FROM ${OS}
 
-ARG OS=debian:buster
-ARG TF_VER=1.13.1
+#----------------------------------------------------------------------------------------------
+FROM redisfab/${ARCH}-xbuild:${OSNICK} as builder
+
+RUN [ "cross-build-start" ]
 
 ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
 
@@ -24,9 +33,16 @@ RUN pip install keras_preprocessing==1.0.5 --no-deps
 RUN set -e; \
 	git clone https://github.com/tensorflow/tensorflow.git ;\
 	cd tensorflow ;\
-	git checkout v${TF_VER}
+	git checkout v1.13.1
 
 RUN set -e; \
 	cd tensorflow ;\
 	./configure ;\
 	bazel build --jobs $(eval "$X_NPROC") --config=opt //tensorflow:libtensorflow.so
+
+ADD ./deps/readies/ /build/deps/readies/
+ADD ./build/tensorflow-arm/collect.py /build/
+
+RUN  ./collect.py
+
+RUN [ "cross-build-end" ]

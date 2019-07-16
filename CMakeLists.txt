@@ -12,7 +12,7 @@ GET_FILENAME_COMPONENT(depsAbs
 
 LIST(APPEND CMAKE_PREFIX_PATH ${depsAbs}/libtorch)
 
-INCLUDE_DIRECTORIES(${depsAbs}/tensorflow/include ${depsAbs}/dlpack/include)
+INCLUDE_DIRECTORIES(${depsAbs}/tensorflow/include ${depsAbs}/onnxruntime/include ${depsAbs}/dlpack/include)
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -25,7 +25,8 @@ IF (NOT TF_LIBRARIES)
     MESSAGE(FATAL_ERROR "Could not find tensorflow")
 ENDIF()
 
-FIND_LIBRARY(ORT_LIBRARIES NAMES onnxruntime)
+FIND_LIBRARY(ORT_LIBRARIES NAMES onnxruntime
+	PATHS ${depsAbs}/onnxruntime/lib)
 IF (NOT ORT_LIBRARIES)
     MESSAGE(FATAL_ERROR "Could not find ONNXRuntime")
 ENDIF()

@@ -27,7 +27,7 @@ OSX=""
 BIND=""
 REDIS_ENT_LIB_PATH=/opt/redislabs/lib
 
-if (( $(./deps/readies/bin/platform --os) == macosx )); then
+if [[ $(./deps/readies/bin/platform --os) == macosx ]]; then
 	OSX=1
 	
 	export PATH=$PATH:$HOME/Library/Python/2.7/bin
@@ -44,11 +44,11 @@ fi
 
 [[ -z $OSX || -e $REDIS_ENT_LIB_PATH ]] || { echo "$REDIS_ENT_LIB_PATH exists - aborting."; exit 1; }
 
-if [[ -e $REDIS_ENT_LIB_PATH ]]; then
-	ln -fs $ROOT/deps/install/lib/ $REDIS_ENT_LIB_PATH
+if [[ ! -e $REDIS_ENT_LIB_PATH ]]; then
+	ln -fs $ROOT/deps/install/ $REDIS_ENT_LIB_PATH
 else
 	BIND=1
-	mount --bind $ROOT/deps/install/lib/ $REDIS_ENT_LIB_PATH
+	mount --bind $ROOT/deps/install/ $REDIS_ENT_LIB_PATH
 fi
 
 export LD_LIBRARY_PATH=$ROOT/deps/install:$LD_LIBRARY_PATH
@@ -69,7 +69,7 @@ ARCHOSVER=$(echo "$PACK_FNAME" | sed -e "s/^$PACKAGE_NAME\.\([^.]*\..*\)\.zip/\1
 ARCHOS=$(echo "$ARCHOSVER" | cut -f1 -d.)
 
 echo "Building dependencies ..."
-cd $ROOT/deps/install/lib
+cd $ROOT/deps/install
 tar pczf $BINDIR/$PRODUCT-dependencies.${ARCHOSVER}.tgz *.so*
 DEPS_FNAME=$PRODUCT-dependencies.${ARCHOSVER}.tgz
 
