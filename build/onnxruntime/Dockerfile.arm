@@ -18,7 +18,7 @@ RUN [ "cross-build-start" ]
 
 RUN apt-get -qq update
 RUN apt-get -qq install -y curl wget tar git patch
-RUN apt-get -qq install -y build-essential
+RUN apt-get -qq install -y build-essential cmake
 RUN apt-get -qq install -y libcurl4-openssl-dev libssl-dev libatlas-base-dev zlib1g-dev
 
 RUN apt-get -qq install -y python3 python3-pip python3-dev
@@ -30,13 +30,13 @@ WORKDIR /build
 ADD ./*.patch /build/
 ADD ./pack.sh /build/
 
-RUN set -e ;\
-	wget -q https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3.tar.gz ;\
-	tar zxf cmake-3.14.3.tar.gz ;\
-	cd cmake-3.14.3 ;\
-	./configure --system-curl ;\
-	make -j $(nproc);\
-	make install
+# RUN set -e ;\
+# 	wget -q https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3.tar.gz ;\
+# 	tar zxf cmake-3.14.3.tar.gz ;\
+# 	cd cmake-3.14.3 ;\
+# 	./configure --system-curl ;\
+# 	make -j $(nproc);\
+# 	make install
 
 ARG BUILDTYPE=MinSizeRel
 ARG BUILDARGS="--config ${BUILDTYPE} ${ARM_FLAG} --parallel"

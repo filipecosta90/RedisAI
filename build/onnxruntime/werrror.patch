@@ -743,3 +743,16 @@ index f63e7d0f..33048562 100644
             """
          make('tvmai/ci-i386', 'build', '-j2')
          pack_lib('i386', tvm_multilib)
+diff --git a/tools/ci_build/build.py b/tools/ci_build/build.py
+index 7449970d8..316668eee 100755
+--- a/tools/ci_build/build.py
++++ b/tools/ci_build/build.py
+@@ -739,7 +739,7 @@ def main():
+     if (args.build):
+         build_targets(cmake_path, build_dir, configs, args.parallel)
+ 
+-    if args.test :
++    if False and args.test :
+         run_onnxruntime_tests(args, source_dir, ctest_path, build_dir, configs,
+                               args.enable_pybind if not args.skip_onnx_tests else False,
+                               args.use_tvm, args.use_tensorrt, args.use_ngraph)
