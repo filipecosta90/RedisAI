@@ -17,7 +17,7 @@ WORKDIR /build
 
 RUN set -e ;\
 	apt-get -qq update ;\
-	apt-get -qq install -y git build-essential ninja-build cmake python3-pip python3-cffi
+	apt-get -q install -y git build-essential ninja-build cmake python3-pip python3-cffi
 RUN pip3 install setuptools pyyaml typing
 RUN pip3 install numpy
 # RUN pip3 install mkl mkl-include
