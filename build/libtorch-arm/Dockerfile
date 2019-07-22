@@ -6,10 +6,10 @@ ARG OSNICK=buster
 # arm32v7|arm64v8
 ARG ARCH=arm64v8
 
-ARG PT_VER=1.1.0
-
 #----------------------------------------------------------------------------------------------
 FROM redisfab/${ARCH}-xbuild:${OSNICK} as builder
+
+ARG PT_VER=1.1.0
 
 RUN [ "cross-build-start" ] 
 

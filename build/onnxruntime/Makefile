@@ -1,11 +1,11 @@
 
-ROOT=../..
+ROOT=.
 
-VERSION=1.1.0
+VERSION=0.4.0
 
-S3_URL=redismodules/pytorch
+S3_URL=redismodules/onnxruntime
 
-STEM=libtorch-cpu-linux
+STEM=onnxruntime-linux
 
 #----------------------------------------------------------------------------------------------
 

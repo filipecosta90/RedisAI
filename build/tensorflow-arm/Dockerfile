@@ -6,34 +6,33 @@ ARG OSNICK=buster
 # arm32v7|arm64v8
 ARG ARCH=arm64v8
 
-ARG TF_VER=1.13.1
-
 #----------------------------------------------------------------------------------------------
-FROM insready/bazel:latest as bazel
-
-#----------------------------------------------------------------------------------------------
-FROM redisfab/${ARCH}-xbuild:${OSNICK} as builder
+FROM redisfab/${ARCH}-jdk-xbuild:${OSNICK}
 
 RUN [ "cross-build-start" ]
 
+ARG TF_BRANCH=r1.13
+ARG TF_VER=1.13.1
+
+ENV DEBIAN_FRONTEND=noninteractive
 ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
 
 WORKDIR /build
 
-COPY --from=bazel /usr/bin/bazel* /usr/local/bin/
+RUN set -e; \
+	apt-get -qq update; \
+	apt-get -q install -y git build-essential python3 python3-dev python3-pip wget
+
+RUN wget -q -O /usr/local/bin/bazel https://s3.amazonaws.com/redismodules/bazel/bazel-0.24.1.${ARCH}
+
+RUN pip3 install six numpy wheel setuptools mock
+RUN pip3 install keras_applications==1.0.6 --no-deps
+RUN pip3 install keras_preprocessing==1.0.5 --no-deps
 
 RUN set -e; \
-	apt-get update; \
-	apt-get -qq install -y git build-essential python3 python3-dev python3-pip
-
-RUN pip install six numpy wheel setuptools mock
-RUN pip install keras_applications==1.0.6 --no-deps
-RUN pip install keras_preprocessing==1.0.5 --no-deps
-
-RUN set -e; \
-	git clone https://github.com/tensorflow/tensorflow.git ;\
+	git clone --single-branch --branch ${TF_BRANCH} --recursive https://github.com/tensorflow/tensorflow.git ;\
 	cd tensorflow ;\
-	git checkout v1.13.1
+	git checkout v${TF_VER}
 
 RUN set -e; \
 	cd tensorflow ;\

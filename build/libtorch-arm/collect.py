@@ -64,7 +64,7 @@ def create_tar(name, basedir, dir='.'):
 
 def collect_pytorch():
     d_pytorch = dest/'libtorch'
-    with cwd(pytorch/'torch/lib/include'):
+    with cwd(pytorch/'torch/include'):
         for f in Path('.').glob('**/*.h'):
             copy_p(f, d_pytorch/'include')
     with cwd(pytorch/'torch/lib'):

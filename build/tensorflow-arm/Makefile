@@ -1,11 +1,11 @@
 
 ROOT=../..
 
-VERSION=1.1.0
+VERSION=1.13.1
 
-S3_URL=redismodules/pytorch
+S3_URL=redismodules/tensorflow
 
-STEM=libtorch-cpu-linux
+STEM=tensorflow-cpu-linux
 
 #----------------------------------------------------------------------------------------------
 
