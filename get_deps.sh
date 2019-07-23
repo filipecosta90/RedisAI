@@ -173,7 +173,7 @@ if [[ ! -d onnxruntime ]]; then
 			ORT_BUILD=gpu
 		fi
 		if [[ $ARCH == x64 ]]; then
-			ORT_ARCH=x86_64
+			ORT_ARCH=x64
 			ORT_URL_BASE=https://github.com/Microsoft/onnxruntime/releases/download/v${ORT_VERSION}
 		elif [[ $ARCH == arm64v8 ]]; then
 			ORT_ARCH=arm64
