@@ -7,6 +7,8 @@ S3_URL=redismodules/onnxruntime
 
 STEM=onnxruntime-linux
 
+KEEP ?= 1
+
 #----------------------------------------------------------------------------------------------
 
 define targets # (1=OP, 2=op)
@@ -31,7 +33,10 @@ build_$(1):
 	@docker build --iidfile $$(IID_$(1)) -t redisfab/$(STEM)-$(1):$(VERSION) -f Dockerfile \
 		--build-arg ARCH=$(1) --build-arg ARCH_FLAG=$(2) $(ROOT)
 	@docker create --cidfile $$(CID_$(1)) `cat $$(IID_$(1))`
-	@docker cp `cat $$(CID_$(1))`:/build/$(STEM)-$(2)-$(VERSION).tar.gz .
+	@docker cp `cat $$(CID_$(1))`:/build/$(STEM)-$(2)-$(VERSION).tgz .
+ifneq ($(KEEP),1)
+	# @rm $$(IID_$(1)) $$(CID_$(1))
+endif
 
 .PHONY: build_$(1)
 endef
@@ -40,7 +45,10 @@ endef
 
 define publish_arm # (1=arch, 2=tar-arch)
 publish_$(1):
-	@aws s3 cp $(STEM)-$(2)-$(VERSION).tar.gz s3://$(S3_URL)/ --acl public-read
+	@aws s3 cp $(STEM)-$(2)-$(VERSION).tgz s3://$(S3_URL)/ --acl public-read
+ifneq ($(KEEP),1)
+	# @rm $(STEM)-$(2)-$(VERSION).tgz
+endif
 
 .PHONY: publish_$(1)
 endef
