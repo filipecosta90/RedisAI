@@ -1,6 +1,6 @@
 
 ROOT=.
-include build/mk/defs
+include deps/readies/mk/defs
 
 BINDIR=$(BINROOT)/src
 

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+FILES="tensorflow/lite/python/interpreter.py \
+  tensorflow/lite/python/interpreter_wrapper/interpreter_wrapper.cc \
+  tensorflow/lite/python/interpreter_wrapper/interpreter_wrapper.h \
+  tensorflow/lite/tools/make/Makefile \
+  tensorflow/lite/tools/make/targets/aarch64_makefile.inc \
+  tensorflow/lite/build_def.bzl \
+  "
+
+for f in $FILES; do
+	diff -u old/$f new/$f
+done
+

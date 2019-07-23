@@ -1,9 +1,9 @@
-bin/*
-VARIANT
-BINDIR
-deps/*
-!deps/readies/
-!deps/*.py
+/bin/*
+/VARIANT
+/BINDIR
+/deps/*
+!/deps/readies/
+!/deps/*.py
 examples/js/node_modules/
 examples/js/package-lock.json
 /[0-9]*/

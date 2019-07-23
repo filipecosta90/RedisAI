@@ -45,8 +45,12 @@ if [[ ! -d tensorflow ]]; then
 			TF_ARCH=x86_64
 			LIBTF_URL_BASE=https://storage.googleapis.com/tensorflow/libtensorflow
 		elif [[ $ARCH == arm64v8 ]]; then
-			TF_VERSION=1.13.1
+			TF_VERSION=1.14.0
 			TF_ARCH=arm64
+			LIBTF_URL_BASE=https://s3.amazonaws.com/redismodules/tensorflow
+		elif [[ $ARCH == arm32v7 ]]; then
+			TF_VERSION=1.14.0
+			TF_ARCH=arm
 			LIBTF_URL_BASE=https://s3.amazonaws.com/redismodules/tensorflow
 		fi
 	elif [[ $OS == macosx ]]; then
@@ -90,6 +94,8 @@ if [[ ! -d libtorch ]]; then
 			PT_ARCH=x86_64
 		elif [[ $ARCH == arm64v8 ]]; then
 			PT_ARCH=arm64
+		elif [[ $ARCH == arm32v7 ]]; then
+			PT_ARCH=arm
 		fi
 	elif [[ $OS == macosx ]]; then
 		PT_OS=macos
@@ -156,14 +162,37 @@ elif [[ $OS == macosx ]]; then
 	ORT_BUILD=""
 fi
 
-ORT_ARCHIVE=onnxruntime-${ORT_OS}-${ORT_VERSION}.tgz
-
 if [[ ! -d onnxruntime ]]; then
 	echo "Installing onnxruntime..."
 
+	if [[ $OS == linux ]]; then
+		ORT_OS=linux
+		if [[ $GPU == no ]]; then
+			ORT_BUILD=cpu
+		else
+			ORT_BUILD=gpu
+		fi
+		if [[ $ARCH == x64 ]]; then
+			ORT_ARCH=x86_64
+			ORT_URL_BASE=https://github.com/Microsoft/onnxruntime/releases/download/v${ORT_VERSION}
+		elif [[ $ARCH == arm64v8 ]]; then
+			ORT_ARCH=arm64
+			ORT_URL_BASE=https://s3.amazonaws.com/redismodules/onnxruntime
+		elif [[ $ARCH == arm32v7 ]]; then
+			ORT_ARCH=arm
+			ORT_URL_BASE=https://s3.amazonaws.com/redismodules/onnxruntime
+		fi
+	elif [[ $OS == macosx ]]; then
+		ORT_OS=osx-x64
+		ORT_BUILD=""
+		ORT_URL_BASE=https://github.com/Microsoft/onnxruntime/releases/download/v${ORT_VERSION}
+	fi
+
+	ORT_ARCHIVE=onnxruntime-${ORT_OS}-${ORT_ARCH}-${ORT_VERSION}.tgz
+
 	if [[ ! -e ${ORT_ARCHIVE} ]]; then
 		echo "Downloading ONNXRuntime ${ORT_VERSION} ${ORT_BUILD} ..."
-		wget -q https://github.com/Microsoft/onnxruntime/releases/download/v${ORT_VERSION}/${ORT_ARCHIVE}
+		wget -q $ORT_URL_BASE/${ORT_ARCHIVE}
 		echo "Done."
 	fi
 

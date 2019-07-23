@@ -12,7 +12,7 @@ import paella
 
 #----------------------------------------------------------------------------------------------
 
-TENSORFLOW_VERSION = '1.13.1'
+TENSORFLOW_VERSION = '1.14.0'
 
 parser = argparse.ArgumentParser(description='Prepare RedisAI dependant distribution packages.')
 parser.add_argument('--tensorflow', default='../tensorflow', help='root of tensorflow repository')

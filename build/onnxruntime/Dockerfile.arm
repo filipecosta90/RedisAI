@@ -30,14 +30,6 @@ WORKDIR /build
 ADD ./*.patch /build/
 ADD ./pack.sh /build/
 
-# RUN set -e ;\
-# 	wget -q https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3.tar.gz ;\
-# 	tar zxf cmake-3.14.3.tar.gz ;\
-# 	cd cmake-3.14.3 ;\
-# 	./configure --system-curl ;\
-# 	make -j $(nproc);\
-# 	make install
-
 ARG BUILDTYPE=MinSizeRel
 ARG BUILDARGS="--config ${BUILDTYPE} ${ARM_FLAG} --parallel"
 

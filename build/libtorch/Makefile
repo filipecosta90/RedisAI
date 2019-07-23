@@ -1,12 +1,20 @@
 
 ROOT=../..
 
-VERSION=1.1.0
+VERSION ?= 1.1.0
+OSNICK ?= stretch
+
+#----------------------------------------------------------------------------------------------
 
 S3_URL=redismodules/pytorch
 
 STEM=libtorch-cpu-linux
 
+OS.bionic=ubuntu:bionic
+OS.stretch=debian:stretch-slim
+OS.buster=debian:buster-slim
+OS=$(OS.$(OSNICK))
+ 
 #----------------------------------------------------------------------------------------------
 
 define targets # (1=OP, 2=op)
@@ -23,12 +31,23 @@ $(eval $(call targets,PUBLISH,publish))
 
 #----------------------------------------------------------------------------------------------
 
+define build_x64 # (1=arch, 2=tar-arch)
+build_x64:
+	@docker build --iidfile $$(IID_$(1)) -t redisfab/$(STEM)-$(1):$(VERSION) -f Dockerfile.x64 \
+		--build-arg OS=$(OS) $(ROOT)
+	@docker create --cidfile $$(CID_$(1)) `cat $$(IID_$(1))`
+	@docker cp `cat $$(CID_$(1))`:/build/$(STEM)-$(2)-$(VERSION).tar.gz .
+
+.PHONY: build_x64
+endef
+
 define build_arm # (1=arch, 2=tar-arch)
 IID_$(1)=$(1)_$(VERSION).iid
 CID_$(1)=$(1)_$(VERSION).cid
 
 build_$(1):
-	@docker build --iidfile $$(IID_$(1)) -t redisfab/$(STEM)-$(1):$(VERSION) --build-arg ARCH=$(1) $(ROOT)
+	@docker build --iidfile $$(IID_$(1)) -t redisfab/$(STEM)-$(1):$(VERSION) -f Dockerfile.arm \
+		--build-arg ARCH=$(1) $(ROOT)
 	@docker create --cidfile $$(CID_$(1)) `cat $$(IID_$(1))`
 	@docker cp `cat $$(CID_$(1))`:/build/$(STEM)-$(2)-$(VERSION).tar.gz .
 
@@ -36,6 +55,13 @@ build_$(1):
 endef
 
 #----------------------------------------------------------------------------------------------
+
+define publish_x64
+publish_x64:
+	@
+
+.PHONY: publish_x64
+endef
 
 define publish_arm # (1=arch, 2=tar-arch)
 publish_$(1):
@@ -50,12 +76,17 @@ all: build publish
 
 build: $(BUILD_TARGETS)
 
+$(eval $(call build_x64,x64,x86_64))
 $(eval $(call build_arm,arm64v8,arm64))
 $(eval $(call build_arm,arm32v7,arm))
 
 publish: $(PUBLISH_TARGETS)
 
+$(eval $(call publish_x64,x64,x86_64))
 $(eval $(call publish_arm,arm64v8,arm64))
 $(eval $(call publish_arm,arm32v7,arm))
 
-.PHONY: all build publish
+repack:
+	@PT_VERSION=$(VERSION) ./repack.sh
+
+.PHONY: all build repack publish

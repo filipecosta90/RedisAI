@@ -15,8 +15,10 @@ fi
 OS=$(python3 $ROOT/deps/readies/bin/platform --os)
 ARCH=$(python3 $ROOT/deps/readies/bin/platform --arch)
 
-PT_VERSION=1.1.0
-#PT_VERSION="latest"
+if [[ -z $PT_VERSION ]]; then
+	PT_VERSION=1.1.0
+	#PT_VERSION="latest"
+fi
 
 if [[ $OS == linux ]]; then
 	PT_OS=shared-with-deps
