@@ -30,7 +30,7 @@ IID_$(1)=$(1)_$(VERSION).iid
 CID_$(1)=$(1)_$(VERSION).cid
 
 build_$(1):
-	@docker build --iidfile $$(IID_$(1)) -t redisfab/$(STEM)-$(1):$(VERSION) -f Dockerfile \
+	@docker build --iidfile $$(IID_$(1)) -t redisfab/$(STEM)-$(1):$(VERSION) -f Dockerfile.arm \
 		--build-arg ARCH=$(1) --build-arg ARCH_FLAG=$(2) $(ROOT)
 	@docker create --cidfile $$(CID_$(1)) `cat $$(IID_$(1))`
 	@docker cp `cat $$(CID_$(1))`:/build/$(STEM)-$(2)-$(VERSION).tgz .
