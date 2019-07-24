@@ -5,7 +5,7 @@ VERSION=1.13.1
 
 S3_URL=redismodules/tensorflow
 
-STEM=tensorflow-cpu-linux
+STEM=libtensorflow-cpu-linux
 
 #----------------------------------------------------------------------------------------------
 

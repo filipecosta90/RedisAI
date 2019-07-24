@@ -70,7 +70,7 @@ def collect_tensorflow():
             if str(f).endswith(".params"):
                 continue
             copy_p(f, d_tensorflow/'lib')
-    create_tar(dest/f'libtensorflow-{tf_build}-{tf_os}-{tf_arch}-{tf_ver}.tar.gz', d_tensorflow)
+    create_tar(dest/f'libtensorflow-{tf_build}-{tf_os}-{tf_arch}-{tf_ver}.tar.gz', dest)
 
 #----------------------------------------------------------------------------------------------
 
