@@ -14,8 +14,8 @@ WORKDIR /build
 
 RUN ./deps/readies/bin/getpy2
 RUN ./system-setup.py
-RUN make deps
-RUN make -j$(eval "$X_NPROC")
+RUN make deps SHOW=1
+RUN make build SHOW=1
 
 #----------------------------------------------------------------------------------------------
 # FROM redisfab/redis-x64-${OSNICK}:5.0.5

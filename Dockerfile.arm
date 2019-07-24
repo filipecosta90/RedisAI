@@ -8,15 +8,13 @@ FROM redisfab/redis-${OSNICK}-xbuild:5.0.5 AS builder
 
 RUN [ "cross-build-start" ]
 
-ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
-
 ADD ./ /build
 WORKDIR /build
 
 RUN ./deps/readies/bin/getpy2
 RUN ./system-setup.py
-RUN make deps
-RUN make -j$(eval "$X_NPROC")
+RUN make deps SHOW=1
+RUN make SHOW=1
 
 RUN [ "cross-build-end" ]
 

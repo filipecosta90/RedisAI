@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # set -x
-set -e
+[[ $VERBOSE == 1 ]] && set -e
 
 if [[ "$1" == "cpu" ]]; then
 	GPU=no

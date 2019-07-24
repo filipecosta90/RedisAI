@@ -35,7 +35,7 @@ $(BINDIR)/Makefile : CMakeLists.txt
 build: bindirs $(TARGET)
 
 $(TARGET): bindirs deps $(BINDIR)/Makefile
-	$(SHOW)$(MAKE) -C $(BINDIR)
+	$(SHOW)$(MAKE) -C $(BINDIR) -j $(shell nproc)
 	$(SHOW)cd bin; ln -sf ../$(TARGET) $(notdir $(TARGET))
 
 clean:
@@ -53,7 +53,7 @@ setup:
 	$(SHOW)./system-setup.py
 
 fetch deps:
-	$(SHOW)./get_deps.sh $(DEPS_FLAGS)
+	$(SHOW)VERBOSE=$(SHOW) ./get_deps.sh $(DEPS_FLAGS)
 
 #----------------------------------------------------------------------------------------------
 
