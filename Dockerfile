@@ -1,13 +1,11 @@
 # BUILD redisai-cpu-${ARCH}-${OSNICK}:M.m.b
 
-# stretch|bionic|buster
-ARG OSNICK=buster
+# OSNICK=bionic|stretch|buster
+ARG OSNICK=stretch
 
 #----------------------------------------------------------------------------------------------
 # FROM redisfab/redis-x64-${OSNICK}:5.0.5 AS builder
 FROM redis:latest AS builder
-
-ENV X_NPROC "cat /proc/cpuinfo|grep processor|wc -l"
 
 ADD ./ /build
 WORKDIR /build

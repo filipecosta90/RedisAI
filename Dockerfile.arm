@@ -23,6 +23,8 @@ FROM redisfab/redis-${OSNICK}-xbuild:5.0.5
 
 RUN [ "cross-build-start" ]
 
+RUN set -e; apt-get -qq update; apt-get -q install -y libgomp1
+
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
 RUN mkdir -p "$LD_LIBRARY_PATH"
