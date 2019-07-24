@@ -21,6 +21,8 @@ RUN make build SHOW=1
 # FROM redisfab/redis-x64-${OSNICK}:5.0.5
 FROM redis:latest
 
+RUN set -e; apt-get -qq update; apt-get -q install -y libgomp1
+
 ENV LD_LIBRARY_PATH /usr/lib/redis/modules/
 
 RUN mkdir -p "$LD_LIBRARY_PATH"
