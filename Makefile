@@ -53,7 +53,7 @@ setup:
 	$(SHOW)./system-setup.py
 
 fetch deps:
-	$(SHOW)VERBOSE=$(SHOW) ./get_deps.sh $(DEPS_FLAGS)
+	$(SHOW)VERBOSE=$(_SHOW) ./get_deps.sh $(DEPS_FLAGS)
 
 #----------------------------------------------------------------------------------------------
 
