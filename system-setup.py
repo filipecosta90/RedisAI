@@ -24,9 +24,9 @@ class RedisGearsSetup(paella.Setup):
         self.install("git python3 cmake ca-certificates curl unzip wget patchelf awscli")
 
     def debian_compat(self):
-        self.run("curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash")
-        self.install("git-lfs")
-        self.run("git lfs install")
+        # self.run("curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash")
+        # self.install("git-lfs")
+        # self.run("git lfs install")
 
         self.install("build-essential")
         self.install("python-psutil")
