@@ -26,7 +26,7 @@ $(1)_TARGETS += $(if $(findstring $(X64),1),$(2)_x64)
 $(1)_TARGETS += $(if $(findstring $(ARM7),1),$(2)_arm32v7)
 $(1)_TARGETS += $(if $(findstring $(ARM8),1),$(2)_arm64v8)
 
-$(1)_TARGETS += $$(if $$(strip $$($(1)_TARGETS)),,$(2)_arm32v7 $(2)_arm64v8)
+$(1)_TARGETS += $$(if $$(strip $$($(1)_TARGETS)),,$(2)_x64 $(2)_arm32v7 $(2)_arm64v8)
 endef
 
 $(eval $(call targets,BUILD,build))
