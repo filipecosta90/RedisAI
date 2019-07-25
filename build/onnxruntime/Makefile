@@ -24,14 +24,16 @@ $(eval $(call targets,BUILD,build))
 $(eval $(call targets,PUBLISH,publish))
 
 #----------------------------------------------------------------------------------------------
+# arch=x64|arm32v7|arm64v8
+# arch_1=x86_64|arm|arm64
 
-define build_arm # (1=arch, 2=tar-arch)
+define build_arm # (1=arch, 2=arch_1)
 IID_$(1)=$(1)_$(VERSION).iid
 CID_$(1)=$(1)_$(VERSION).cid
 
 build_$(1):
 	@docker build --iidfile $$(IID_$(1)) -t redisfab/$(STEM)-$(1):$(VERSION) -f Dockerfile.arm \
-		--build-arg ARCH=$(1) --build-arg ARCH_FLAG=$(2) $(ROOT)
+		--build-arg ARCH=$(1) --build-arg ARCH_FLAG=--$(2) $(ROOT)
 	@docker create --cidfile $$(CID_$(1)) `cat $$(IID_$(1))`
 	@docker cp `cat $$(CID_$(1))`:/build/$(STEM)-$(2)-$(VERSION).tgz .
 ifneq ($(KEEP),1)
@@ -43,7 +45,7 @@ endef
 
 #----------------------------------------------------------------------------------------------
 
-define publish_arm # (1=arch, 2=tar-arch)
+define publish_arm # (1=arch, 2=arch_1)
 publish_$(1):
 	@aws s3 cp $(STEM)-$(2)-$(VERSION).tgz s3://$(S3_URL)/ --acl public-read
 ifneq ($(KEEP),1)

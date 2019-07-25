@@ -25,6 +25,7 @@ FROM redisfab/redis-${ARCH}-${OSNICK}:5.0.5
 RUN set -e; apt-get -qq update; apt-get -q install -y libgomp1
 
 ENV REDIS_MODULES /usr/lib/redis/modules
+ENV LD_LIBRARY_PATH $REDIS_MODULES
 
 RUN mkdir -p $REDIS_MODULES/
 
