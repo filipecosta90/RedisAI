@@ -1,7 +1,7 @@
 # BUILD redisfab/redisai-cpu-${OSNICK}:M.m.b-${ARCH}
 
 # OSNICK=bionic|stretch|buster
-ARG OSNICK=stretch
+ARG OSNICK=buster
 
 # ARCH=x64|arm64v8|arm32v7
 ARG ARCH=x64
