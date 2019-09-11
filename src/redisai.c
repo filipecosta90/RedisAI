@@ -227,7 +227,8 @@ int RedisAI_TensorSet_RedisCommand(RedisModuleCtx *ctx, RedisModuleString **argv
     return RedisModule_ReplyWithError(ctx, "ERR invalid data type");
   }
 
-  int dims_arg = 3;
+
+    int dims_arg = 3;
 
   ArgsCursor dac;
   const char* matches[] = {"BLOB", "VALUES"};
@@ -266,26 +267,35 @@ int RedisAI_TensorSet_RedisCommand(RedisModuleCtx *ctx, RedisModuleString **argv
   const size_t nbytes = len * datasize;
   size_t datalen;
   const char *data;
-  RAI_Tensor *t = RAI_TensorCreate(typestr, dims, ndims, hasdata);
-  if (!t){
-    return RedisModule_ReplyWithError(ctx, "ERR could not create tensor");
-  }
+
+  RAI_Tensor *t = NULL;
+
   switch (datafmt){
   case REDISAI_DATA_BLOB:
-    AC_GetString(&ac, &data, &datalen, 0);
-    if (datalen != nbytes){
-      return RedisModule_ReplyWithError(ctx, "ERR data length does not match tensor shape and type");
-    }
-    RAI_TensorSetData(t, data, datalen);
+      t = RAI_TensorCreate( typestr, datasize, dims, ndims, hasdata, 0 );
+      RedisModuleString *dataRS;
+      AC_GetRString(&ac,&dataRS, 0);
+//      datalen = RM_ValueLength(RedisModuleKey *key);
+          RedisModule_RetainString(ctx,dataRS);
+      t->tensor.dl_tensor.data = dataRS;
+
+
+//    AC_GetString(&ac, &data, &datalen, 0);
+//    if (datalen != nbytes){
+//      return RedisModule_ReplyWithError(ctx, "ERR data length does not match tensor shape and type");
+//    }
+//    RAI_TensorSetData(t, data, datalen);
     break;
   case REDISAI_DATA_VALUES:
     if (argc != len + 4 + ndims){
       return RedisModule_WrongArity(ctx);
     }
-    DLDataType datatype = RAI_TensorDataType(t);
+
+    t = RAI_TensorCreate( typestr, datasize, dims, ndims, hasdata, 1 );
 
     long i;
-    if (datatype.code == kDLFloat){
+          DLDataType dtype = RAI_TensorDataType(t);
+    if (dtype.code == kDLFloat){
       double val;
       for (i = 0; i < len; i++){
         int ac_ret = AC_GetDouble(&ac, &val, 0);
@@ -317,13 +327,17 @@ int RedisAI_TensorSet_RedisCommand(RedisModuleCtx *ctx, RedisModuleString **argv
     }
     break;
   default:
+      t = RAI_TensorCreate( typestr, datasize, dims, ndims, hasdata, 1 );
     // default does not require tensor data setting since calloc setted it to 0
     break;
   }
-
+      if (!t){
+    return RedisModule_ReplyWithError(ctx, "ERR could not create tensor");
+  }
   RedisModule_ModuleTypeSetValue(key, RedisAI_TensorType, t);
   RedisModule_CloseKey(key);
-  RedisModule_ReplyWithSimpleString(ctx, "OK");
+//  RedisModule_ReplyWithOK(ctx);
+ RedisModule_ReplyWithSimpleString(ctx, "OK");
   RedisModule_ReplicateVerbatim(ctx);
 
   return REDISMODULE_OK;

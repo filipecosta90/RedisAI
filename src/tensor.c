@@ -241,14 +241,9 @@ int RAI_TensorInit(RedisModuleCtx* ctx){
   return RedisAI_TensorType != NULL;
 }
 
-RAI_Tensor* RAI_TensorCreate(const char* dataTypeStr, long long* dims, int ndims, int hasdata) {
-  DLDataType dtype = Tensor_GetDataType(dataTypeStr);
-  const size_t dtypeSize = Tensor_DataTypeSize(dtype);
-  if ( dtypeSize == 0){
-    return NULL;
-  }
-
-  RAI_Tensor* ret = RedisModule_Alloc(sizeof(*ret));
+RAI_Tensor* RAI_TensorCreate( const char* typestr, const size_t dtypeSize, long long* dims, int ndims, int hasdata, int allocateData ) {
+    const DLDataType dtype = Tensor_GetDataType(typestr);
+    RAI_Tensor* ret = RedisModule_Alloc(sizeof(*ret));
   int64_t* shape = RedisModule_Alloc(ndims*sizeof(*shape));
   int64_t* strides = RedisModule_Alloc(ndims*sizeof(*strides));
 
@@ -267,16 +262,18 @@ RAI_Tensor* RAI_TensorCreate(const char* dataTypeStr, long long* dims, int ndims
       .device_id = 0
   };
   void* data = NULL;
-  if (hasdata) {
-    data = RedisModule_Alloc(len * dtypeSize);
-  }
-  else {
-    data = RedisModule_Calloc(len, dtypeSize);
-  }
+  if ( allocateData ){
+      if (hasdata) {
+          data = RedisModule_Alloc(len * dtypeSize);
+      }
+      else {
+          data = RedisModule_Calloc(len, dtypeSize);
+      }
 
-  if (data == NULL) {
-    RedisModule_Free(ret);
-    return NULL;
+      if (data == NULL) {
+          RedisModule_Free(ret);
+          return NULL;
+      }
   }
 
   ret->tensor = (DLManagedTensor){
